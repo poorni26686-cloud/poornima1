@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import { MessageCircle, X, Send, Bot, User, Sparkles, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface Message {
   id: string;
@@ -12,8 +14,8 @@ interface Message {
 const quickQuestions = [
   "What are the best beaches to visit?",
   "Suggest a 5-day itinerary for Paris",
-  "Find hotels near me",
-  "What's the weather in Tokyo?",
+  "Find hotels near popular attractions",
+  "What's the weather like in Tokyo?",
 ];
 
 const ChatBot = () => {
@@ -51,24 +53,53 @@ const ChatBot = () => {
     setInput("");
     setIsLoading(true);
 
-    // Simulate AI response (replace with actual API call when backend is connected)
-    setTimeout(() => {
-      const responses = [
-        "That's a great choice! Based on your interests, I'd recommend exploring the beautiful beaches of Thailand or the historic streets of Rome. Would you like me to create a detailed itinerary?",
-        "I'd love to help you plan that trip! Could you tell me more about your preferred travel dates and budget? This will help me give you the best recommendations.",
-        "Excellent question! Here are my top picks for you: 1) Bali for stunning beaches and culture, 2) Switzerland for mountain adventures, 3) Japan for a unique blend of tradition and modernity. Which interests you most?",
-        "Let me check that for you! Based on current conditions, I recommend booking accommodations in advance and packing light layers. Would you like specific hotel recommendations?",
-      ];
+    try {
+      // Prepare messages for API (exclude welcome message and format for API)
+      const apiMessages = [...messages, userMessage]
+        .filter((m) => m.id !== "welcome")
+        .map((m) => ({ role: m.role, content: m.content }));
+
+      const { data, error } = await supabase.functions.invoke("chat", {
+        body: { messages: apiMessages },
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      if (!data.success) {
+        throw new Error(data.error || "Failed to get response");
+      }
 
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: "assistant",
-        content: responses[Math.floor(Math.random() * responses.length)],
+        content: data.message,
       };
 
       setMessages((prev) => [...prev, aiMessage]);
+    } catch (error) {
+      console.error("Chat error:", error);
+      const errorMessage = error instanceof Error ? error.message : "Failed to get response";
+      
+      if (errorMessage.includes("Rate limit")) {
+        toast.error("Too many requests. Please wait a moment and try again.");
+      } else if (errorMessage.includes("credits")) {
+        toast.error("AI credits exhausted. Please add credits to continue.");
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
+
+      // Add error message to chat
+      const errorAiMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: "assistant",
+        content: "I'm sorry, I couldn't process your request right now. Please try again in a moment.",
+      };
+      setMessages((prev) => [...prev, errorAiMessage]);
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -109,7 +140,7 @@ const ChatBot = () => {
               <h3 className="font-semibold text-primary-foreground">Travel Assistant</h3>
               <p className="text-xs text-primary-foreground/70 flex items-center gap-1">
                 <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                Online
+                Powered by AI
               </p>
             </div>
           </div>
@@ -140,7 +171,7 @@ const ChatBot = () => {
                 {message.role === "user" ? (
                   <User className="w-4 h-4 text-primary-foreground" />
                 ) : (
-                  <Sparkles className="w-4 h-4 text-primary-foreground" />
+                  <Sparkles className="w-4 h-4 text-secondary-foreground" />
                 )}
               </div>
               <div
@@ -156,7 +187,7 @@ const ChatBot = () => {
             </div>
           ))}
 
-            {isLoading && (
+          {isLoading && (
             <div className="flex gap-3">
               <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center">
                 <Sparkles className="w-4 h-4 text-secondary-foreground" />
