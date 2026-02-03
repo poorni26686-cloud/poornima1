@@ -1,0 +1,7 @@
+project_id = "xdmmpteaekammzxooixp"
+
+[functions.generate-trip]
+verify_jwt = false
+
+[functions.chat]
+verify_jwt = false
