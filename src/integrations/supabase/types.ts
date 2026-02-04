@@ -14,7 +14,122 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      destinations: {
+        Row: {
+          best_time_to_visit: string | null
+          category: string
+          continent: string
+          country: string
+          created_at: string
+          description: string
+          highlights: string[] | null
+          id: string
+          image_url: string
+          is_featured: boolean | null
+          location: string
+          name: string
+          price_per_person: number
+          rating: number | null
+          reviews_count: number | null
+          updated_at: string
+        }
+        Insert: {
+          best_time_to_visit?: string | null
+          category: string
+          continent: string
+          country: string
+          created_at?: string
+          description: string
+          highlights?: string[] | null
+          id?: string
+          image_url: string
+          is_featured?: boolean | null
+          location: string
+          name: string
+          price_per_person: number
+          rating?: number | null
+          reviews_count?: number | null
+          updated_at?: string
+        }
+        Update: {
+          best_time_to_visit?: string | null
+          category?: string
+          continent?: string
+          country?: string
+          created_at?: string
+          description?: string
+          highlights?: string[] | null
+          id?: string
+          image_url?: string
+          is_featured?: boolean | null
+          location?: string
+          name?: string
+          price_per_person?: number
+          rating?: number | null
+          reviews_count?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      favorite_destinations: {
+        Row: {
+          created_at: string
+          destination_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          destination_id: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          destination_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favorite_destinations_destination_id_fkey"
+            columns: ["destination_id"]
+            isOneToOne: false
+            referencedRelation: "destinations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          phone: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
