@@ -1,9 +1,11 @@
 import { useState, useRef, useEffect } from "react";
-import { MessageCircle, X, Send, Bot, User, Sparkles, Loader2 } from "lucide-react";
+import { MessageCircle, X, Send, Bot, User, Sparkles, Loader2, FileDown, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import ReactMarkdown from "react-markdown";
+import { generateTravelPDF, extractDestination } from "@/utils/pdfGenerator";
 
 interface Message {
   id: string;
@@ -13,9 +15,9 @@ interface Message {
 
 const quickQuestions = [
   "What are the best beaches to visit?",
-  "Suggest a 5-day itinerary for Paris",
-  "Find hotels near popular attractions",
-  "What's the weather like in Tokyo?",
+  "Plan a 5-day trip to Paris for me",
+  "What should I pack for a tropical vacation?",
+  "Best budget-friendly destinations in Europe?",
 ];
 
 const ChatBot = () => {
@@ -29,6 +31,7 @@ const ChatBot = () => {
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -102,6 +105,52 @@ const ChatBot = () => {
     }
   };
 
+  /**
+   * Generate and download PDF from conversation
+   */
+  const handleGeneratePdf = async () => {
+    if (messages.length <= 1) {
+      toast.error("Please have a conversation first before generating a PDF.");
+      return;
+    }
+
+    setIsGeneratingPdf(true);
+    toast.info("Generating your travel plan PDF...");
+
+    try {
+      // Prepare messages for API (exclude welcome message)
+      const apiMessages = messages
+        .filter((m) => m.id !== "welcome")
+        .map((m) => ({ role: m.role, content: m.content }));
+
+      const { data, error } = await supabase.functions.invoke("chat", {
+        body: { messages: apiMessages, generatePdf: true },
+      });
+
+      if (error) throw error;
+
+      if (!data.success) {
+        throw new Error(data.error || "Failed to generate PDF content");
+      }
+
+      // Extract destination from conversation for PDF title
+      const destination = extractDestination(apiMessages);
+
+      // Generate PDF
+      generateTravelPDF(data.message, {
+        title: destination ? `Travel Plan: ${destination}` : "Your Travel Plan",
+        destination: destination || undefined,
+      });
+
+      toast.success("PDF downloaded successfully!");
+    } catch (error) {
+      console.error("PDF generation error:", error);
+      toast.error("Failed to generate PDF. Please try again.");
+    } finally {
+      setIsGeneratingPdf(false);
+    }
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -144,12 +193,32 @@ const ChatBot = () => {
               </p>
             </div>
           </div>
-          <button
-            onClick={() => setIsOpen(false)}
-            className="text-primary-foreground/70 hover:text-primary-foreground transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            {/* PDF Export Button */}
+            <button
+              onClick={handleGeneratePdf}
+              disabled={isGeneratingPdf || messages.length <= 1}
+              className={cn(
+                "p-2 rounded-full transition-colors",
+                messages.length > 1
+                  ? "text-primary-foreground/70 hover:text-primary-foreground hover:bg-primary-foreground/10"
+                  : "text-primary-foreground/30 cursor-not-allowed"
+              )}
+              title="Download travel plan as PDF"
+            >
+              {isGeneratingPdf ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                <FileDown className="w-5 h-5" />
+              )}
+            </button>
+            <button
+              onClick={() => setIsOpen(false)}
+              className="text-primary-foreground/70 hover:text-primary-foreground transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         {/* Messages */}
@@ -182,7 +251,13 @@ const ChatBot = () => {
                     : "bg-muted text-foreground rounded-tl-none"
                 )}
               >
-                {message.content}
+                {message.role === "assistant" ? (
+                  <div className="prose prose-sm dark:prose-invert max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 [&_ul]:my-1 [&_li]:my-0.5 [&_p]:my-1">
+                    <ReactMarkdown>{message.content}</ReactMarkdown>
+                  </div>
+                ) : (
+                  message.content
+                )}
               </div>
             </div>
           ))}
@@ -204,18 +279,41 @@ const ChatBot = () => {
         {/* Quick Questions */}
         {messages.length <= 1 && (
           <div className="px-4 pb-2">
-            <p className="text-xs text-muted-foreground mb-2">Quick questions:</p>
+            <p className="text-xs text-muted-foreground mb-2">Try asking:</p>
             <div className="flex flex-wrap gap-2">
               {quickQuestions.map((question) => (
                 <button
                   key={question}
                   onClick={() => handleSend(question)}
-                  className="text-xs px-3 py-1.5 rounded-full bg-muted hover:bg-primary hover:text-primary-foreground transition-colors"
+                  className="text-xs px-3 py-1.5 rounded-full bg-muted hover:bg-primary hover:text-primary-foreground transition-colors text-left"
                 >
                   {question}
                 </button>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* PDF Download Hint */}
+        {messages.length > 3 && (
+          <div className="px-4 pb-2">
+            <button
+              onClick={handleGeneratePdf}
+              disabled={isGeneratingPdf}
+              className="w-full flex items-center justify-center gap-2 text-xs py-2 px-3 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+            >
+              {isGeneratingPdf ? (
+                <>
+                  <Loader2 className="w-3 h-3 animate-spin" />
+                  Generating PDF...
+                </>
+              ) : (
+                <>
+                  <FileDown className="w-3 h-3" />
+                  Download your travel plan as PDF
+                </>
+              )}
+            </button>
           </div>
         )}
 
