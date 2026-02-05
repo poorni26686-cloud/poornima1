@@ -22,6 +22,7 @@ import Auth from "./pages/Auth";
 import Destinations from "./pages/Destinations";
 import TripPlanner from "./pages/TripPlanner";
 import NotFound from "./pages/NotFound";
+import Profile from "./pages/Profile";
 
 // Create React Query client with default options
 const queryClient = new QueryClient();
@@ -39,6 +40,7 @@ const App = () => (
             <Route path="/auth" element={<Auth />} />
             <Route path="/destinations" element={<Destinations />} />
             <Route path="/planner" element={<TripPlanner />} />
+            <Route path="/profile" element={<Profile />} />
             
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
