@@ -23,6 +23,7 @@ import Destinations from "./pages/Destinations";
 import TripPlanner from "./pages/TripPlanner";
 import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
+import Favorites from "./pages/Favorites";
 
 // Create React Query client with default options
 const queryClient = new QueryClient();
@@ -41,6 +42,7 @@ const App = () => (
             <Route path="/destinations" element={<Destinations />} />
             <Route path="/planner" element={<TripPlanner />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/favorites" element={<Favorites />} />
             
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
