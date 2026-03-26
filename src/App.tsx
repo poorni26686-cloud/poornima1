@@ -20,6 +20,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Destinations from "./pages/Destinations";
+import DestinationDetail from "./pages/DestinationDetail";
 import TripPlanner from "./pages/TripPlanner";
 import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
