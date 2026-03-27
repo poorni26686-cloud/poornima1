@@ -57,7 +57,7 @@ const DestinationCard = ({
           loading="lazy"
         />
         <div className="absolute top-4 left-4">
-          <span className="px-3 py-1 rounded-full bg-primary text-primary-foreground text-xs font-medium">
+          <span className="px-3 py-1.5 rounded-full bg-accent text-accent-foreground text-xs font-semibold">
             {category}
           </span>
         </div>
