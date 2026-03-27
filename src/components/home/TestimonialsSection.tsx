@@ -29,17 +29,17 @@ const testimonials = [
 
 const TestimonialsSection = () => {
   return (
-    <section className="py-20 bg-background">
+    <section className="py-24 bg-background">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <span className="text-primary font-medium text-sm uppercase tracking-wider">
+          <span className="text-secondary font-semibold text-sm uppercase tracking-widest">
             Testimonials
           </span>
-          <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mt-2">
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mt-3">
             Loved by Travelers
           </h2>
-          <p className="text-muted-foreground mt-4">
+          <p className="text-muted-foreground mt-4 text-lg">
             See what our community of travelers has to say about their experiences
           </p>
         </div>
@@ -49,11 +49,11 @@ const TestimonialsSection = () => {
           {testimonials.map((testimonial, index) => (
             <div
               key={testimonial.id}
-              className="bg-card rounded-2xl p-8 shadow-sm hover:shadow-lg transition-all duration-300 card-hover relative"
+              className="bg-card rounded-2xl p-8 shadow-sm hover:shadow-lg transition-all duration-300 card-hover relative border border-border/50"
               style={{ animationDelay: `${index * 100}ms` }}
             >
               {/* Quote Icon */}
-              <Quote className="absolute top-6 right-6 w-10 h-10 text-primary/10" />
+              <Quote className="absolute top-6 right-6 w-10 h-10 text-secondary/15" />
               
               {/* Rating */}
               <div className="flex gap-1 mb-4">
@@ -72,7 +72,7 @@ const TestimonialsSection = () => {
                 <img
                   src={testimonial.avatar}
                   alt={testimonial.name}
-                  className="w-12 h-12 rounded-full object-cover"
+                  className="w-12 h-12 rounded-full object-cover ring-2 ring-secondary/20"
                 />
                 <div>
                   <div className="font-semibold text-foreground">

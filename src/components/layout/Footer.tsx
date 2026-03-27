@@ -3,34 +3,27 @@ import { MapPin, Mail, Phone, Facebook, Twitter, Instagram, Youtube } from "luci
 
 const Footer = () => {
   return (
-    <footer className="bg-foreground text-background">
+    <footer className="bg-primary text-primary-foreground">
       <div className="container mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
-                <MapPin className="w-5 h-5 text-primary-foreground" />
+              <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center">
+                <MapPin className="w-5 h-5 text-secondary-foreground" />
               </div>
               <span className="font-display text-xl font-bold">Wanderlust</span>
             </div>
-            <p className="text-background/70 text-sm leading-relaxed">
+            <p className="text-primary-foreground/70 text-sm leading-relaxed">
               Your intelligent travel companion. Discover amazing destinations,
               connect with expert guides, and plan unforgettable adventures.
             </p>
             <div className="flex gap-4">
-              <a href="#" className="text-background/60 hover:text-primary transition-colors">
-                <Facebook className="w-5 h-5" />
-              </a>
-              <a href="#" className="text-background/60 hover:text-primary transition-colors">
-                <Twitter className="w-5 h-5" />
-              </a>
-              <a href="#" className="text-background/60 hover:text-primary transition-colors">
-                <Instagram className="w-5 h-5" />
-              </a>
-              <a href="#" className="text-background/60 hover:text-primary transition-colors">
-                <Youtube className="w-5 h-5" />
-              </a>
+              {[Facebook, Twitter, Instagram, Youtube].map((Icon, i) => (
+                <a key={i} href="#" className="text-primary-foreground/50 hover:text-secondary transition-colors">
+                  <Icon className="w-5 h-5" />
+                </a>
+              ))}
             </div>
           </div>
 
@@ -41,10 +34,7 @@ const Footer = () => {
               {["Destinations", "Tour Guides", "Trip Planner", "Hotels", "Restaurants"].map(
                 (item) => (
                   <li key={item}>
-                    <Link
-                      to="#"
-                      className="text-background/70 hover:text-primary transition-colors text-sm"
-                    >
+                    <Link to="#" className="text-primary-foreground/60 hover:text-secondary transition-colors text-sm">
                       {item}
                     </Link>
                   </li>
@@ -60,10 +50,7 @@ const Footer = () => {
               {["Help Center", "Safety Info", "Cancellation Options", "Travel Guidelines", "FAQs"].map(
                 (item) => (
                   <li key={item}>
-                    <Link
-                      to="#"
-                      className="text-background/70 hover:text-primary transition-colors text-sm"
-                    >
+                    <Link to="#" className="text-primary-foreground/60 hover:text-secondary transition-colors text-sm">
                       {item}
                     </Link>
                   </li>
@@ -77,26 +64,20 @@ const Footer = () => {
             <h4 className="font-display text-lg font-semibold mb-4">Contact Us</h4>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
-                <MapPin className="w-5 h-5 text-primary shrink-0 mt-0.5" />
-                <span className="text-background/70 text-sm">
+                <MapPin className="w-5 h-5 text-secondary shrink-0 mt-0.5" />
+                <span className="text-primary-foreground/60 text-sm">
                   123 Travel Street, Adventure City, TC 12345
                 </span>
               </li>
               <li className="flex items-center gap-3">
-                <Mail className="w-5 h-5 text-primary" />
-                <a
-                  href="mailto:hello@wanderlust.com"
-                  className="text-background/70 hover:text-primary transition-colors text-sm"
-                >
+                <Mail className="w-5 h-5 text-secondary" />
+                <a href="mailto:hello@wanderlust.com" className="text-primary-foreground/60 hover:text-secondary transition-colors text-sm">
                   hello@wanderlust.com
                 </a>
               </li>
               <li className="flex items-center gap-3">
-                <Phone className="w-5 h-5 text-primary" />
-                <a
-                  href="tel:+1234567890"
-                  className="text-background/70 hover:text-primary transition-colors text-sm"
-                >
+                <Phone className="w-5 h-5 text-secondary" />
+                <a href="tel:+1234567890" className="text-primary-foreground/60 hover:text-secondary transition-colors text-sm">
                   +1 (234) 567-890
                 </a>
               </li>
@@ -104,20 +85,16 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-background/10 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-background/50 text-sm">
+        <div className="border-t border-primary-foreground/10 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-primary-foreground/40 text-sm">
             © 2025 Wanderlust. All rights reserved.
           </p>
           <div className="flex gap-6">
-            <Link to="#" className="text-background/50 hover:text-primary text-sm transition-colors">
-              Privacy Policy
-            </Link>
-            <Link to="#" className="text-background/50 hover:text-primary text-sm transition-colors">
-              Terms of Service
-            </Link>
-            <Link to="#" className="text-background/50 hover:text-primary text-sm transition-colors">
-              Cookies
-            </Link>
+            {["Privacy Policy", "Terms of Service", "Cookies"].map((item) => (
+              <Link key={item} to="#" className="text-primary-foreground/40 hover:text-secondary text-sm transition-colors">
+                {item}
+              </Link>
+            ))}
           </div>
         </div>
       </div>
