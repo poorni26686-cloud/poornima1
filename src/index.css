@@ -169,7 +169,7 @@
   }
 
   .card-hover {
-    @apply transition-all duration-400 ease-out;
+    @apply transition-all duration-300 ease-out;
   }
 
   .card-hover:hover {
