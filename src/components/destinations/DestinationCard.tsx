@@ -103,7 +103,7 @@ const DestinationCard = ({
             <span className="text-muted-foreground text-sm">/person</span>
           </div>
           <Link to={`/destination/${id}`}>
-            <Button size="sm" className="btn-gradient">View Details</Button>
+            <Button size="sm" className="btn-gradient rounded-xl">View Details</Button>
           </Link>
         </div>
       </div>
