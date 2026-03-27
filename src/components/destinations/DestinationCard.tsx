@@ -57,7 +57,7 @@ const DestinationCard = ({
           loading="lazy"
         />
         <div className="absolute top-4 left-4">
-          <span className="px-3 py-1 rounded-full bg-primary text-primary-foreground text-xs font-medium">
+          <span className="px-3 py-1.5 rounded-full bg-accent text-accent-foreground text-xs font-semibold">
             {category}
           </span>
         </div>
@@ -103,7 +103,7 @@ const DestinationCard = ({
             <span className="text-muted-foreground text-sm">/person</span>
           </div>
           <Link to={`/destination/${id}`}>
-            <Button size="sm" className="btn-gradient">View Details</Button>
+            <Button size="sm" className="btn-gradient rounded-xl">View Details</Button>
           </Link>
         </div>
       </div>

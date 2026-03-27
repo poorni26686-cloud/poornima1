@@ -8,67 +8,31 @@ import mountainsImage from "@/assets/destination-mountains.jpg";
 import desertImage from "@/assets/destination-desert.jpg";
 
 const destinations = [
-  {
-    id: 1,
-    name: "Angkor Wat",
-    location: "Cambodia",
-    image: templeImage,
-    rating: 4.9,
-    reviews: 2847,
-    price: 45,
-    category: "Heritage",
-  },
-  {
-    id: 2,
-    name: "Venice Canals",
-    location: "Italy",
-    image: europeImage,
-    rating: 4.8,
-    reviews: 3621,
-    price: 120,
-    category: "City",
-  },
-  {
-    id: 3,
-    name: "Swiss Alps",
-    location: "Switzerland",
-    image: mountainsImage,
-    rating: 4.9,
-    reviews: 1952,
-    price: 85,
-    category: "Adventure",
-  },
-  {
-    id: 4,
-    name: "Sahara Oasis",
-    location: "Morocco",
-    image: desertImage,
-    rating: 4.7,
-    reviews: 1284,
-    price: 95,
-    category: "Exotic",
-  },
+  { id: 1, name: "Angkor Wat", location: "Cambodia", image: templeImage, rating: 4.9, reviews: 2847, price: 45, category: "Heritage" },
+  { id: 2, name: "Venice Canals", location: "Italy", image: europeImage, rating: 4.8, reviews: 3621, price: 120, category: "City" },
+  { id: 3, name: "Swiss Alps", location: "Switzerland", image: mountainsImage, rating: 4.9, reviews: 1952, price: 85, category: "Adventure" },
+  { id: 4, name: "Sahara Oasis", location: "Morocco", image: desertImage, rating: 4.7, reviews: 1284, price: 95, category: "Exotic" },
 ];
 
 const FeaturedDestinations = () => {
   return (
-    <section className="py-20 bg-background">
+    <section className="py-24 bg-background">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-14">
           <div>
-            <span className="text-primary font-medium text-sm uppercase tracking-wider">
+            <span className="text-secondary font-semibold text-sm uppercase tracking-widest">
               Top Destinations
             </span>
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mt-2">
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mt-3">
               Explore Popular Places
             </h2>
-            <p className="text-muted-foreground mt-2 max-w-xl">
+            <p className="text-muted-foreground mt-2 max-w-xl text-lg">
               Discover the world's most breathtaking destinations curated by our travel experts
             </p>
           </div>
           <Link to="/destinations">
-            <Button variant="outline" className="group">
+            <Button variant="outline" className="group rounded-xl border-primary text-primary hover:bg-primary hover:text-primary-foreground">
               View All
               <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
@@ -84,7 +48,7 @@ const FeaturedDestinations = () => {
               className="group"
               style={{ animationDelay: `${index * 100}ms` }}
             >
-              <div className="destination-card card-hover h-80 rounded-2xl overflow-hidden">
+              <div className="destination-card card-hover h-80 rounded-2xl overflow-hidden shadow-sm">
                 <img
                   src={destination.image}
                   alt={destination.name}
@@ -93,33 +57,33 @@ const FeaturedDestinations = () => {
                 
                 {/* Category Badge */}
                 <div className="absolute top-4 left-4 z-10">
-                  <span className="px-3 py-1 rounded-full bg-primary text-primary-foreground text-xs font-medium">
+                  <span className="px-3 py-1.5 rounded-full bg-accent text-accent-foreground text-xs font-semibold">
                     {destination.category}
                   </span>
                 </div>
 
                 {/* Content Overlay */}
                 <div className="absolute bottom-0 left-0 right-0 p-5 z-10">
-                  <div className="flex items-center gap-1 text-accent mb-2">
-                    <Star className="w-4 h-4 fill-current" />
-                    <span className="text-sm font-medium text-primary-foreground">
+                  <div className="flex items-center gap-1 mb-2">
+                    <Star className="w-4 h-4 text-accent fill-accent" />
+                    <span className="text-sm font-semibold text-white">
                       {destination.rating}
                     </span>
-                    <span className="text-primary-foreground/60 text-xs">
+                    <span className="text-white/60 text-xs">
                       ({destination.reviews.toLocaleString()} reviews)
                     </span>
                   </div>
                   
-                  <h3 className="font-display text-xl font-bold text-primary-foreground mb-1">
+                  <h3 className="font-display text-xl font-bold text-white mb-1">
                     {destination.name}
                   </h3>
                   
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1 text-primary-foreground/70 text-sm">
+                    <div className="flex items-center gap-1 text-white/70 text-sm">
                       <MapPin className="w-3.5 h-3.5" />
                       {destination.location}
                     </div>
-                    <div className="text-primary-foreground text-sm">
+                    <div className="text-white text-sm">
                       From <span className="font-bold text-lg">${destination.price}</span>
                     </div>
                   </div>
