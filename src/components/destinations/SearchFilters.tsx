@@ -55,19 +55,11 @@ const SearchFilters = ({ filters, onFiltersChange, viewMode, onViewModeChange, r
 
   return (
     <div className="space-y-4">
-      {/* Search Bar */}
-      <div className="max-w-2xl mx-auto">
-        <div className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-          <input
-            type="text"
-            value={filters.searchQuery}
-            onChange={(e) => updateFilter("searchQuery", e.target.value)}
-            placeholder="Search destinations, countries, or experiences..."
-            className="w-full pl-12 pr-4 py-4 rounded-2xl border border-border bg-card shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
-          />
-        </div>
-      </div>
+      {/* Region-wise Search Bar */}
+      <RegionSearch
+        value={filters.searchQuery}
+        onChange={(val) => updateFilter("searchQuery", val)}
+      />
 
       {/* Category & Controls */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 py-4 border-b border-border">
