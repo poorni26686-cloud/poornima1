@@ -2,12 +2,17 @@
  * Advanced Search and Filter Component for Destinations
  */
 
+/**
+ * Advanced Search and Filter Component for Destinations
+ */
+
 import { useState } from "react";
-import { Search, SlidersHorizontal, Grid, List, X } from "lucide-react";
+import { SlidersHorizontal, Grid, List, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import RegionSearch from "./RegionSearch";
 
 const categories = ["All", "Beach", "Adventure", "Heritage", "City", "Exotic", "Nature"];
 const continents = ["All", "Asia", "Europe", "Africa", "North America", "South America", "Oceania"];
