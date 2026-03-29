@@ -1,5 +1,5 @@
 /**
- * Destinations Page - Refactored with advanced search filters and card component
+ * Destinations Page — with state selection, place cards, trip cart, and AI planning
  */
 
 import { useState, useEffect } from "react";
@@ -11,6 +11,9 @@ import Footer from "@/components/layout/Footer";
 import ChatBot from "@/components/chat/ChatBot";
 import SearchFilters, { FilterState } from "@/components/destinations/SearchFilters";
 import DestinationCard from "@/components/destinations/DestinationCard";
+import StatePlaces from "@/components/destinations/StatePlaces";
+import TripCartPanel from "@/components/destinations/TripCartPanel";
+import CartFloatingButton from "@/components/destinations/CartFloatingButton";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -39,6 +42,8 @@ const Destinations = () => {
   const [error, setError] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
+  const [selectedState, setSelectedState] = useState<string>("");
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const [filters, setFilters] = useState<FilterState>({
     searchQuery: "",
     category: "All",
@@ -48,6 +53,20 @@ const Destinations = () => {
   });
 
   const { user } = useAuth();
+
+  // Check if a state was selected from the search dropdown
+  useEffect(() => {
+    // When searchQuery exactly matches a state name, show its places
+    const query = filters.searchQuery.trim();
+    if (query && query.length > 3) {
+      // Import check against place data
+      import("@/data/placeDetails").then((mod) => {
+        if (mod.default[query]) {
+          setSelectedState(query);
+        }
+      });
+    }
+  }, [filters.searchQuery]);
 
   useEffect(() => {
     const fetchDestinations = async () => {
@@ -115,6 +134,11 @@ const Destinations = () => {
     return matchesSearch && matchesCategory && matchesContinent && matchesPrice && matchesRating;
   });
 
+  const handleClearState = () => {
+    setSelectedState("");
+    setFilters((f) => ({ ...f, searchQuery: "" }));
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -135,7 +159,7 @@ const Destinations = () => {
             transition={{ delay: 0.1 }}
             className="text-muted-foreground text-lg"
           >
-            Discover amazing places around the world and start planning your next adventure
+            Search by state, pick your favorite places, and generate an AI trip plan
           </motion.p>
         </div>
       </section>
@@ -151,53 +175,64 @@ const Destinations = () => {
             resultCount={filteredDestinations.length}
           />
 
-          {isLoading && (
-            <div className="flex flex-col items-center justify-center py-20">
-              <Loader2 className="w-10 h-10 text-primary animate-spin mb-4" />
-              <p className="text-muted-foreground">Loading destinations...</p>
-            </div>
-          )}
+          {/* State Places View */}
+          {selectedState ? (
+            <StatePlaces selectedState={selectedState} onClearState={handleClearState} />
+          ) : (
+            <>
+              {isLoading && (
+                <div className="flex flex-col items-center justify-center py-20">
+                  <Loader2 className="w-10 h-10 text-primary animate-spin mb-4" />
+                  <p className="text-muted-foreground">Loading destinations...</p>
+                </div>
+              )}
 
-          {error && !isLoading && (
-            <div className="text-center py-20">
-              <p className="text-destructive mb-4">{error}</p>
-              <Button onClick={() => window.location.reload()}>Try Again</Button>
-            </div>
-          )}
+              {error && !isLoading && (
+                <div className="text-center py-20">
+                  <p className="text-destructive mb-4">{error}</p>
+                  <Button onClick={() => window.location.reload()}>Try Again</Button>
+                </div>
+              )}
 
-          {!isLoading && !error && filteredDestinations.length === 0 && (
-            <div className="text-center py-20">
-              <p className="text-muted-foreground">No destinations found matching your criteria.</p>
-              <Button
-                variant="outline"
-                className="mt-4"
-                onClick={() => setFilters({ searchQuery: "", category: "All", continent: "All", priceRange: [0, 5000], minRating: 0 })}
-              >
-                Clear Filters
-              </Button>
-            </div>
-          )}
+              {!isLoading && !error && filteredDestinations.length === 0 && (
+                <div className="text-center py-20">
+                  <p className="text-muted-foreground">No destinations found matching your criteria.</p>
+                  <Button
+                    variant="outline"
+                    className="mt-4"
+                    onClick={() => setFilters({ searchQuery: "", category: "All", continent: "All", priceRange: [0, 5000], minRating: 0 })}
+                  >
+                    Clear Filters
+                  </Button>
+                </div>
+              )}
 
-          {!isLoading && !error && filteredDestinations.length > 0 && (
-            <div className={cn("gap-6 mt-6", viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "flex flex-col")}>
-              {filteredDestinations.map((d, i) => (
-                <DestinationCard
-                  key={d.id}
-                  {...d}
-                  isFavorite={favorites.has(d.id)}
-                  onToggleFavorite={toggleFavorite}
-                  viewMode={viewMode}
-                  index={i}
-                  reviews_count={d.reviews_count ?? 0}
-                />
-              ))}
-            </div>
+              {!isLoading && !error && filteredDestinations.length > 0 && (
+                <div className={cn("gap-6 mt-6", viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "flex flex-col")}>
+                  {filteredDestinations.map((d, i) => (
+                    <DestinationCard
+                      key={d.id}
+                      {...d}
+                      isFavorite={favorites.has(d.id)}
+                      onToggleFavorite={toggleFavorite}
+                      viewMode={viewMode}
+                      index={i}
+                      reviews_count={d.reviews_count ?? 0}
+                    />
+                  ))}
+                </div>
+              )}
+            </>
           )}
         </div>
       </section>
 
       <Footer />
       <ChatBot />
+
+      {/* Cart */}
+      <CartFloatingButton onClick={() => setIsCartOpen(true)} />
+      <TripCartPanel isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </div>
   );
 };
