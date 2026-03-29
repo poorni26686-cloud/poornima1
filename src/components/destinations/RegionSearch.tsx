@@ -1,49 +1,13 @@
 /**
- * Region-wise destination search with auto-suggestions for Indian states
+ * Region-wise destination search with auto-suggestions for all Indian states & UTs
+ * Features: preview images, famous places, region grouping, text highlighting
  */
 
 import { useState, useRef, useEffect } from "react";
-import { Search, MapPin, X } from "lucide-react";
+import { Search, MapPin, X, Landmark } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
-
-interface RegionData {
-  region: string;
-  states: string[];
-}
-
-const indianRegions: RegionData[] = [
-  {
-    region: "North India",
-    states: [
-      "Chandigarh", "Delhi", "Haryana", "Himachal Pradesh",
-      "Jammu & Kashmir", "Ladakh", "Punjab", "Rajasthan",
-      "Uttar Pradesh", "Uttarakhand",
-    ],
-  },
-  {
-    region: "South India",
-    states: [
-      "Andhra Pradesh", "Karnataka", "Kerala",
-      "Puducherry", "Tamil Nadu", "Telangana",
-    ],
-  },
-  {
-    region: "East India",
-    states: [
-      "Arunachal Pradesh", "Assam", "Bihar", "Jharkhand",
-      "Manipur", "Meghalaya", "Mizoram", "Nagaland",
-      "Odisha", "Sikkim", "Tripura", "West Bengal",
-    ],
-  },
-  {
-    region: "West India",
-    states: [
-      "Dadra & Nagar Haveli", "Daman & Diu", "Goa",
-      "Gujarat", "Madhya Pradesh", "Maharashtra",
-    ],
-  },
-];
+import indianRegions from "@/data/indianStates";
 
 interface RegionSearchProps {
   value: string;
@@ -51,12 +15,11 @@ interface RegionSearchProps {
   placeholder?: string;
 }
 
-const RegionSearch = ({ value, onChange, placeholder = "Search destinations across India..." }: RegionSearchProps) => {
+const RegionSearch = ({ value, onChange, placeholder = "Search states, cities, or attractions across India..." }: RegionSearchProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [inputFocused, setInputFocused] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown on outside click
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
@@ -69,15 +32,21 @@ const RegionSearch = ({ value, onChange, placeholder = "Search destinations acro
 
   const query = value.toLowerCase().trim();
 
-  // Filter regions/states based on query
+  // Filter by state name, places, or region name
   const filteredRegions = indianRegions
     .map((r) => ({
       ...r,
       states: r.states.filter(
-        (s) => !query || s.toLowerCase().includes(query) || r.region.toLowerCase().includes(query)
+        (s) =>
+          !query ||
+          s.name.toLowerCase().includes(query) ||
+          s.places.some((p) => p.toLowerCase().includes(query)) ||
+          r.region.toLowerCase().includes(query)
       ),
     }))
     .filter((r) => r.states.length > 0);
+
+  const totalResults = filteredRegions.reduce((a, r) => a + r.states.length, 0);
 
   const handleSelect = (state: string) => {
     onChange(state);
@@ -97,6 +66,20 @@ const RegionSearch = ({ value, onChange, placeholder = "Search destinations acro
   const handleClear = () => {
     onChange("");
     setIsOpen(false);
+  };
+
+  /** Highlight matching substring */
+  const highlight = (text: string) => {
+    if (!query) return <span>{text}</span>;
+    const idx = text.toLowerCase().indexOf(query);
+    if (idx === -1) return <span>{text}</span>;
+    return (
+      <span>
+        {text.slice(0, idx)}
+        <span className="font-semibold text-primary">{text.slice(idx, idx + query.length)}</span>
+        {text.slice(idx + query.length)}
+      </span>
+    );
   };
 
   return (
@@ -136,51 +119,69 @@ const RegionSearch = ({ value, onChange, placeholder = "Search destinations acro
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.15 }}
-            className="absolute z-50 left-0 right-0 mt-2 rounded-2xl border border-border bg-card shadow-lg overflow-hidden"
+            className="absolute z-50 left-0 right-0 mt-2 rounded-2xl border border-border bg-card shadow-xl overflow-hidden"
           >
-            <div className="max-h-80 overflow-y-auto py-2">
+            <div className="max-h-[420px] overflow-y-auto">
               {filteredRegions.map((region) => (
                 <div key={region.region}>
                   {/* Region Header */}
-                  <div className="px-4 py-2 flex items-center gap-2">
-                    <MapPin className="w-3.5 h-3.5 text-accent" />
-                    <span className="text-xs font-semibold uppercase tracking-wider text-accent">
+                  <div className="sticky top-0 z-10 px-4 py-2.5 bg-muted/80 backdrop-blur-sm border-b border-border flex items-center gap-2">
+                    <span className="text-base">{region.emoji}</span>
+                    <span className="text-xs font-bold uppercase tracking-wider text-accent">
                       {region.region}
+                    </span>
+                    <span className="text-[10px] text-muted-foreground ml-auto">
+                      {region.states.length} state{region.states.length !== 1 ? "s" : ""}
                     </span>
                   </div>
 
-                  {/* States */}
-                  {region.states.map((state) => {
-                    // Highlight matching text
-                    const idx = state.toLowerCase().indexOf(query);
-                    return (
-                      <button
-                        key={state}
-                        onMouseDown={(e) => e.preventDefault()}
-                        onClick={() => handleSelect(state)}
-                        className="w-full text-left px-6 py-2.5 text-sm text-foreground hover:bg-primary/5 transition-colors flex items-center gap-2"
-                      >
-                        {query && idx !== -1 ? (
-                          <span>
-                            {state.slice(0, idx)}
-                            <span className="font-semibold text-primary">
-                              {state.slice(idx, idx + query.length)}
-                            </span>
-                            {state.slice(idx + query.length)}
+                  {/* State Items */}
+                  {region.states.map((state) => (
+                    <button
+                      key={state.name}
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() => handleSelect(state.name)}
+                      className="w-full text-left px-4 py-3 hover:bg-primary/5 transition-colors flex items-start gap-3 group"
+                    >
+                      {/* Thumbnail */}
+                      <div className="w-16 h-11 rounded-lg overflow-hidden flex-shrink-0 bg-muted border border-border">
+                        <img
+                          src={state.image}
+                          alt={state.name}
+                          loading="lazy"
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                        />
+                      </div>
+
+                      {/* Info */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1.5">
+                          <MapPin className="w-3.5 h-3.5 text-secondary flex-shrink-0" />
+                          <span className="text-sm font-medium text-foreground truncate">
+                            {highlight(state.name)}
                           </span>
-                        ) : (
-                          <span>{state}</span>
-                        )}
-                      </button>
-                    );
-                  })}
+                        </div>
+                        <div className="flex items-center gap-1 mt-1">
+                          <Landmark className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+                          <span className="text-xs text-muted-foreground truncate">
+                            {state.places.map((p, i) => (
+                              <span key={p}>
+                                {i > 0 && " · "}
+                                {highlight(p)}
+                              </span>
+                            ))}
+                          </span>
+                        </div>
+                      </div>
+                    </button>
+                  ))}
                 </div>
               ))}
             </div>
 
-            {/* Footer hint */}
-            <div className="border-t border-border px-4 py-2.5 text-xs text-muted-foreground text-center">
-              {filteredRegions.reduce((a, r) => a + r.states.length, 0)} results across {filteredRegions.length} region{filteredRegions.length !== 1 ? "s" : ""}
+            {/* Footer */}
+            <div className="border-t border-border px-4 py-2.5 bg-muted/50 text-xs text-muted-foreground text-center">
+              {totalResults} state{totalResults !== 1 ? "s" : ""} across {filteredRegions.length} region{filteredRegions.length !== 1 ? "s" : ""}
             </div>
           </motion.div>
         )}
@@ -192,7 +193,7 @@ const RegionSearch = ({ value, onChange, placeholder = "Search destinations acro
             exit={{ opacity: 0, y: -8 }}
             className="absolute z-50 left-0 right-0 mt-2 rounded-2xl border border-border bg-card shadow-lg p-6 text-center"
           >
-            <p className="text-muted-foreground text-sm">No states found for "{value}"</p>
+            <p className="text-muted-foreground text-sm">No states or places found for "{value}"</p>
           </motion.div>
         )}
       </AnimatePresence>
