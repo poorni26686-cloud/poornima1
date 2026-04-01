@@ -10,6 +10,7 @@ import { useTripCart, playSound } from "@/contexts/TripCartContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
+import TripMap from "@/components/map/TripMap";
 
 interface TripCartPanelProps {
   isOpen: boolean;
