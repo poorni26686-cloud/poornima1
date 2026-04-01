@@ -161,6 +161,13 @@ const TripCartPanel = ({ isOpen, onClose }: TripCartPanelProps) => {
                 ))
               )}
 
+              {/* Map View */}
+              {items.length > 0 && (
+                <div className="mt-2">
+                  <TripMap places={items} />
+                </div>
+              )}
+
               {/* Trip Plan Result */}
               {tripPlan && (
                 <motion.div
