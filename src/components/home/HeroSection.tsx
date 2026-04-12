@@ -1,20 +1,10 @@
-import { useState } from "react";
-import { Search, MapPin, Calendar } from "lucide-react";
+import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import heroImage from "@/assets/hero-beach.jpg";
 
 const HeroSection = () => {
-  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
-
-  const handleSearch = () => {
-    if (searchQuery.trim()) {
-      navigate(`/destinations?search=${encodeURIComponent(searchQuery)}`);
-    } else {
-      navigate("/destinations");
-    }
-  };
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -49,49 +39,14 @@ const HeroSection = () => {
             and plan your perfect journey with our intelligent travel companion.
           </p>
 
-          {/* Search Box */}
-          <div className="bg-white rounded-2xl p-4 md:p-6 shadow-2xl max-w-3xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="md:col-span-2">
-                <label className="text-xs font-semibold text-muted-foreground mb-1.5 block uppercase tracking-wide">
-                  Where to?
-                </label>
-                <div className="relative">
-                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-secondary" />
-                  <input
-                    type="text"
-                    placeholder="Search destinations..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-muted/50 focus:outline-none focus:ring-2 focus:ring-secondary/40 transition-all text-foreground"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="text-xs font-semibold text-muted-foreground mb-1.5 block uppercase tracking-wide">
-                  When?
-                </label>
-                <div className="relative">
-                  <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-secondary" />
-                  <input
-                    type="text"
-                    placeholder="Add dates"
-                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-muted/50 focus:outline-none focus:ring-2 focus:ring-secondary/40 transition-all text-foreground"
-                  />
-                </div>
-              </div>
-              <div className="flex items-end">
-                <Button
-                  onClick={handleSearch}
-                  className="w-full h-12 btn-gradient text-base font-semibold"
-                >
-                  <Search className="w-5 h-5 mr-2" />
-                  Explore
-                </Button>
-              </div>
-            </div>
-          </div>
+          {/* CTA Button */}
+          <Button
+            onClick={() => navigate("/destinations")}
+            className="btn-gradient text-base font-semibold px-8 py-6 rounded-xl"
+          >
+            <Search className="w-5 h-5 mr-2" />
+            Explore Destinations
+          </Button>
 
           {/* Stats */}
           <div className="flex flex-wrap justify-center gap-10 pt-8">
