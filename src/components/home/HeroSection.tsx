@@ -1,11 +1,10 @@
-import { useState } from "react";
-import { Search, MapPin, Calendar } from "lucide-react";
+import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import heroImage from "@/assets/hero-beach.jpg";
 
 const HeroSection = () => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
   const navigate = useNavigate();
 
   const handleSearch = () => {
