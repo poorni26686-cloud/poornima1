@@ -1,7 +1,38 @@
-import { Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { MapPin, Users, CalendarDays, Info } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import heroImage from "@/assets/hero-beach.jpg";
+
+const cards = [
+  {
+    title: "Destinations",
+    description: "Explore breathtaking places across India",
+    icon: MapPin,
+    path: "/destinations",
+    gradient: "from-primary to-primary/70",
+  },
+  {
+    title: "Tour Guides",
+    description: "Connect with expert local guides",
+    icon: Users,
+    path: "/destinations",
+    gradient: "from-secondary to-secondary/70",
+  },
+  {
+    title: "Plan Trip",
+    description: "Build your perfect itinerary with AI",
+    icon: CalendarDays,
+    path: "/planner",
+    gradient: "from-accent to-accent/70",
+  },
+  {
+    title: "About",
+    description: "Learn more about our platform",
+    icon: Info,
+    path: "/about",
+    gradient: "from-primary to-secondary",
+  },
+];
 
 const HeroSection = () => {
   const navigate = useNavigate();
@@ -20,49 +51,42 @@ const HeroSection = () => {
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 pt-20 pb-10">
-        <div className="max-w-4xl mx-auto text-center space-y-8">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-sm font-medium">
-            <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-            AI-Powered Travel Assistant
-          </div>
+        <div className="max-w-5xl mx-auto text-center space-y-12">
+          {/* Cards Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+            {cards.map((card, i) => {
+              const Icon = card.icon;
+              return (
+                <motion.button
+                  key={card.title}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.12, duration: 0.5 }}
+                  onClick={() => navigate(card.path)}
+                  className="group relative rounded-2xl p-6 md:p-8 bg-white/10 backdrop-blur-md border border-white/20 text-white text-left overflow-hidden transition-all duration-300 hover:bg-white/20 hover:scale-105 hover:shadow-2xl hover:shadow-white/10 cursor-pointer"
+                >
+                  {/* Glow effect on hover */}
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-white/10 to-transparent" />
 
-          {/* Heading */}
-          <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight tracking-tight">
-            Discover Your Next
-            <span className="block text-secondary">Adventure</span>
-          </h1>
+                  <div className="relative z-10 flex flex-col items-center text-center gap-3">
+                    <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${card.gradient} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                      <Icon className="w-7 h-7 text-white" />
+                    </div>
+                    <h3 className="font-display text-lg md:text-xl font-bold">
+                      {card.title}
+                    </h3>
+                    <p className="text-xs md:text-sm text-white/70 leading-relaxed">
+                      {card.description}
+                    </p>
+                  </div>
 
-          {/* Subtitle */}
-          <p className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto font-light leading-relaxed">
-            Explore breathtaking destinations, connect with expert local guides,
-            and plan your perfect journey with our intelligent travel companion.
-          </p>
-
-          {/* CTA Button */}
-          <Button
-            onClick={() => navigate("/destinations")}
-            className="btn-gradient text-base font-semibold px-8 py-6 rounded-xl"
-          >
-            <Search className="w-5 h-5 mr-2" />
-            Explore Destinations
-          </Button>
-
-          {/* Stats */}
-          <div className="flex flex-wrap justify-center gap-10 pt-8">
-            {[
-              { value: "500+", label: "Destinations" },
-              { value: "1000+", label: "Tour Guides" },
-              { value: "50K+", label: "Happy Travelers" },
-              { value: "4.9", label: "Rating" },
-            ].map((stat) => (
-              <div key={stat.label} className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-white">
-                  {stat.value}
-                </div>
-                <div className="text-sm text-white/60 font-medium mt-1">{stat.label}</div>
-              </div>
-            ))}
+                  {/* Arrow indicator */}
+                  <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0">
+                    <span className="text-white/60 text-lg">→</span>
+                  </div>
+                </motion.button>
+              );
+            })}
           </div>
         </div>
       </div>
