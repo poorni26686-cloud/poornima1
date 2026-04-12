@@ -5,15 +5,6 @@ import heroImage from "@/assets/hero-beach.jpg";
 
 const HeroSection = () => {
   const navigate = useNavigate();
-  const navigate = useNavigate();
-
-  const handleSearch = () => {
-    if (searchQuery.trim()) {
-      navigate(`/destinations?search=${encodeURIComponent(searchQuery)}`);
-    } else {
-      navigate("/destinations");
-    }
-  };
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
