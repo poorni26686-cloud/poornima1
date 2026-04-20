@@ -16,8 +16,9 @@
  import { Label } from "@/components/ui/label";
  import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
  import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
- import { useToast } from "@/hooks/use-toast";
- import { User, Mail, Phone, Loader2, Save } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { User, Mail, Phone, Loader2, Save } from "lucide-react";
+import { profileSchema } from "@/lib/validations";
  
  interface ProfileData {
    full_name: string | null;
