@@ -26,6 +26,7 @@ import TripPlanner from "./pages/TripPlanner";
 import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
 import Favorites from "./pages/Favorites";
+import About from "./pages/About";
 
 // Create React Query client with default options
 const queryClient = new QueryClient();
