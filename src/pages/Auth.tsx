@@ -155,10 +155,20 @@ const Auth = () => {
   }
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex relative">
+      {/* Background image covers entire page so the auth card can be transparent */}
+      <div className="absolute inset-0 -z-10">
+        <img
+          src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&h=1280&fit=crop"
+          alt=""
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/60 to-secondary/60" />
+      </div>
+
       {/* Left Side - Authentication Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
-        <div className="w-full max-w-md space-y-8">
+        <div className="w-full max-w-md space-y-6 rounded-2xl border border-white/20 bg-white/10 backdrop-blur-xl p-8 shadow-2xl">
           {/* Logo - Links back to home */}
           <Link to="/" className="flex items-center gap-2 group">
             <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
@@ -205,7 +215,7 @@ const Auth = () => {
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="John Doe"
-                    className="w-full pl-12 pr-4 py-3 rounded-xl border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                    className="w-full pl-12 pr-4 py-3 rounded-xl border border-border bg-white/10 backdrop-blur-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
                     required={!isLogin}
                     autoComplete="name"
                   />
@@ -226,7 +236,7 @@ const Auth = () => {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="you@example.com"
-                  className="w-full pl-12 pr-4 py-3 rounded-xl border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                  className="w-full pl-12 pr-4 py-3 rounded-xl border border-border bg-white/10 backdrop-blur-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
                   required
                   autoComplete="email"
                 />
@@ -247,7 +257,7 @@ const Auth = () => {
                   onChange={handleChange}
                   placeholder="••••••••"
                   minLength={6}
-                  className="w-full pl-12 pr-12 py-3 rounded-xl border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                  className="w-full pl-12 pr-12 py-3 rounded-xl border border-border bg-white/10 backdrop-blur-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
                   required
                   autoComplete={isLogin ? "current-password" : "new-password"}
                 />
@@ -303,10 +313,10 @@ const Auth = () => {
           {/* Divider */}
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-border" />
+              <div className="w-full border-t border-white/20" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">
+              <span className="bg-transparent px-2 text-muted-foreground">
                 Or continue with
               </span>
             </div>
