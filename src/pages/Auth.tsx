@@ -155,10 +155,20 @@ const Auth = () => {
   }
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex relative">
+      {/* Background image covers entire page so the auth card can be transparent */}
+      <div className="absolute inset-0 -z-10">
+        <img
+          src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&h=1280&fit=crop"
+          alt=""
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/60 to-secondary/60" />
+      </div>
+
       {/* Left Side - Authentication Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
-        <div className="w-full max-w-md space-y-8">
+        <div className="w-full max-w-md space-y-6 rounded-2xl border border-white/20 bg-white/10 backdrop-blur-xl p-8 shadow-2xl">
           {/* Logo - Links back to home */}
           <Link to="/" className="flex items-center gap-2 group">
             <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
