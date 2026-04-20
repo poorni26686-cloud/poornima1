@@ -21,6 +21,7 @@ import { MapPin, Mail, Lock, User, Eye, EyeOff, ArrowRight, AlertCircle } from "
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
+import { loginSchema, signupSchema } from "@/lib/validations";
 
 const Auth = () => {
   // Form state
