@@ -84,12 +84,22 @@ const Auth = () => {
           return;
         }
 
-        toast.success(
-          "Account created successfully! Please check your email to verify your account."
+        // Auto-confirm is enabled — sign the user in immediately
+        const { error: signInError } = await signIn(
+          formData.email,
+          formData.password
         );
-        // Switch to login view after successful signup
-        setIsLogin(true);
-        setFormData({ name: "", email: formData.email, password: "" });
+
+        if (signInError) {
+          toast.success("Account created! Please sign in.");
+          setIsLogin(true);
+          setFormData({ name: "", email: formData.email, password: "" });
+          setIsLoading(false);
+          return;
+        }
+
+        toast.success("Account created successfully! Welcome aboard.");
+        navigate("/", { replace: true });
       }
     } catch (err) {
       console.error("Authentication error:", err);
