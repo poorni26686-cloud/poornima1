@@ -21,6 +21,7 @@ import { MapPin, Mail, Lock, User, Eye, EyeOff, ArrowRight, AlertCircle } from "
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
+import { loginSchema, signupSchema } from "@/lib/validations";
 
 const Auth = () => {
   // Form state
@@ -51,8 +52,21 @@ const Auth = () => {
    */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
     setError(null);
+
+    // Validate input with zod before any network call
+    const schema = isLogin ? loginSchema : signupSchema;
+    const payload = isLogin
+      ? { email: formData.email, password: formData.password }
+      : { name: formData.name, email: formData.email, password: formData.password };
+    const parsed = schema.safeParse(payload);
+    if (!parsed.success) {
+      const firstError = parsed.error.errors[0]?.message ?? "Invalid input";
+      setError(firstError);
+      return;
+    }
+
+    setIsLoading(true);
 
     try {
       if (isLogin) {

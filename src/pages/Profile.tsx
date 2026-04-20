@@ -16,8 +16,9 @@
  import { Label } from "@/components/ui/label";
  import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
  import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
- import { useToast } from "@/hooks/use-toast";
- import { User, Mail, Phone, Loader2, Save } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { User, Mail, Phone, Loader2, Save } from "lucide-react";
+import { profileSchema } from "@/lib/validations";
  
  interface ProfileData {
    full_name: string | null;
@@ -35,8 +36,9 @@
      phone: "",
      avatar_url: "",
    });
-   const [isLoading, setIsLoading] = useState(true);
-   const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [errors, setErrors] = useState<{ full_name?: string; phone?: string; avatar_url?: string }>({});
  
    // Redirect to auth if not logged in
    useEffect(() => {
@@ -81,15 +83,37 @@
      }
    }, [user]);
  
-   // Handle profile update
-   const handleSave = async () => {
-     if (!user) return;
-     
-     setIsSaving(true);
-     try {
-       const { error } = await supabase
-         .from("profiles")
-         .update({
+  // Handle profile update
+  const handleSave = async () => {
+    if (!user) return;
+
+    // Validate inputs with zod
+    const parsed = profileSchema.safeParse({
+      full_name: profile.full_name ?? "",
+      phone: profile.phone ?? "",
+      avatar_url: profile.avatar_url ?? "",
+    });
+    if (!parsed.success) {
+      const fieldErrors: typeof errors = {};
+      for (const issue of parsed.error.errors) {
+        const key = issue.path[0] as keyof typeof errors;
+        if (key && !fieldErrors[key]) fieldErrors[key] = issue.message;
+      }
+      setErrors(fieldErrors);
+      toast({
+        title: "Please fix the errors",
+        description: parsed.error.errors[0]?.message ?? "Invalid input",
+        variant: "destructive",
+      });
+      return;
+    }
+    setErrors({});
+
+    setIsSaving(true);
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .update({
            full_name: profile.full_name,
            phone: profile.phone,
            avatar_url: profile.avatar_url,
@@ -171,13 +195,18 @@
                    <User className="h-4 w-4" />
                    Full Name
                  </Label>
-                 <Input
-                   id="full_name"
-                   value={profile.full_name || ""}
-                   onChange={(e) => setProfile({ ...profile, full_name: e.target.value })}
-                   placeholder="Enter your full name"
-                 />
-               </div>
+                  <Input
+                    id="full_name"
+                    value={profile.full_name || ""}
+                    onChange={(e) => setProfile({ ...profile, full_name: e.target.value })}
+                    placeholder="Enter your full name"
+                    maxLength={100}
+                    aria-invalid={!!errors.full_name}
+                  />
+                  {errors.full_name && (
+                    <p className="text-xs text-destructive">{errors.full_name}</p>
+                  )}
+                </div>
  
                {/* Email (read-only) */}
                <div className="space-y-2">
@@ -202,13 +231,24 @@
                    <Phone className="h-4 w-4" />
                    Phone Number
                  </Label>
-                 <Input
-                   id="phone"
-                   value={profile.phone || ""}
-                   onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
-                   placeholder="Enter your phone number"
-                 />
-               </div>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    inputMode="tel"
+                    value={profile.phone || ""}
+                    onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
+                    placeholder="+91 98765 43210"
+                    maxLength={20}
+                    aria-invalid={!!errors.phone}
+                  />
+                  {errors.phone ? (
+                    <p className="text-xs text-destructive">{errors.phone}</p>
+                  ) : (
+                    <p className="text-xs text-muted-foreground">
+                      Include country code, e.g. +91 98765 43210
+                    </p>
+                  )}
+                </div>
  
                {/* Save Button */}
                <Button 
