@@ -36,8 +36,9 @@ import { profileSchema } from "@/lib/validations";
      phone: "",
      avatar_url: "",
    });
-   const [isLoading, setIsLoading] = useState(true);
-   const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [errors, setErrors] = useState<{ full_name?: string; phone?: string; avatar_url?: string }>({});
  
    // Redirect to auth if not logged in
    useEffect(() => {
@@ -82,15 +83,37 @@ import { profileSchema } from "@/lib/validations";
      }
    }, [user]);
  
-   // Handle profile update
-   const handleSave = async () => {
-     if (!user) return;
-     
-     setIsSaving(true);
-     try {
-       const { error } = await supabase
-         .from("profiles")
-         .update({
+  // Handle profile update
+  const handleSave = async () => {
+    if (!user) return;
+
+    // Validate inputs with zod
+    const parsed = profileSchema.safeParse({
+      full_name: profile.full_name ?? "",
+      phone: profile.phone ?? "",
+      avatar_url: profile.avatar_url ?? "",
+    });
+    if (!parsed.success) {
+      const fieldErrors: typeof errors = {};
+      for (const issue of parsed.error.errors) {
+        const key = issue.path[0] as keyof typeof errors;
+        if (key && !fieldErrors[key]) fieldErrors[key] = issue.message;
+      }
+      setErrors(fieldErrors);
+      toast({
+        title: "Please fix the errors",
+        description: parsed.error.errors[0]?.message ?? "Invalid input",
+        variant: "destructive",
+      });
+      return;
+    }
+    setErrors({});
+
+    setIsSaving(true);
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .update({
            full_name: profile.full_name,
            phone: profile.phone,
            avatar_url: profile.avatar_url,
