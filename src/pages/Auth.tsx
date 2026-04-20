@@ -215,7 +215,7 @@ const Auth = () => {
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="John Doe"
-                    className="w-full pl-12 pr-4 py-3 rounded-xl border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                    className="w-full pl-12 pr-4 py-3 rounded-xl border border-border bg-white/10 backdrop-blur-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
                     required={!isLogin}
                     autoComplete="name"
                   />
@@ -236,7 +236,7 @@ const Auth = () => {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="you@example.com"
-                  className="w-full pl-12 pr-4 py-3 rounded-xl border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                  className="w-full pl-12 pr-4 py-3 rounded-xl border border-border bg-white/10 backdrop-blur-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
                   required
                   autoComplete="email"
                 />
@@ -257,7 +257,7 @@ const Auth = () => {
                   onChange={handleChange}
                   placeholder="••••••••"
                   minLength={6}
-                  className="w-full pl-12 pr-12 py-3 rounded-xl border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                  className="w-full pl-12 pr-12 py-3 rounded-xl border border-border bg-white/10 backdrop-blur-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
                   required
                   autoComplete={isLogin ? "current-password" : "new-password"}
                 />
