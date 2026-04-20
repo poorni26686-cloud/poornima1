@@ -38,8 +38,8 @@ serve(async (req) => {
     );
 
     const token = authHeader.replace("Bearer ", "");
-    const { data: claimsData, error: claimsError } = await supabaseClient.auth.getClaims(token);
-    if (claimsError || !claimsData?.claims) {
+    const { data: userData, error: userError } = await supabaseClient.auth.getUser(token);
+    if (userError || !userData?.user) {
       return new Response(
         JSON.stringify({ error: "Invalid authentication" }),
         { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -47,7 +47,7 @@ serve(async (req) => {
     }
 
     const tripData: TripRequest = await req.json();
-    console.log("Authenticated user:", claimsData.claims.sub, "- Trip request:", tripData.destination);
+    console.log("Authenticated user:", userData.user.id, "- Trip request:", tripData.destination);
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
