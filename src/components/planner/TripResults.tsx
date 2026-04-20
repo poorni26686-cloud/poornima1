@@ -15,6 +15,69 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { TripPlan } from "@/pages/TripPlanner";
 import ReactMarkdown from "react-markdown";
+import { generateTravelPDF } from "@/utils/pdfGenerator";
+import { toast } from "sonner";
+
+/** Convert structured TripPlan into markdown for the PDF generator */
+const tripPlanToMarkdown = (plan: TripPlan, destination: string, days: number): string => {
+  const parts: string[] = [];
+
+  if (plan.summary) {
+    parts.push(`## Overview\n${plan.summary}`);
+  }
+
+  if (plan.highlights?.length) {
+    parts.push(`## Must-See Highlights`);
+    plan.highlights.forEach((h, i) => parts.push(`${i + 1}. ${h}`));
+  }
+
+  if (plan.itinerary?.length) {
+    parts.push(`## Day-by-Day Itinerary`);
+    plan.itinerary.forEach((d) => {
+      parts.push(`### Day ${d.day}: ${d.title}`);
+      parts.push(`**Morning:** ${d.morning}`);
+      parts.push(`**Afternoon:** ${d.afternoon}`);
+      parts.push(`**Evening:** ${d.evening}`);
+    });
+  }
+
+  if (plan.restaurants?.length) {
+    parts.push(`## Recommended Restaurants`);
+    plan.restaurants.forEach((r) => {
+      parts.push(`**${r.name}** (${r.priceRange}) — ${r.cuisine}`);
+      parts.push(`Specialty: ${r.specialty}`);
+    });
+  }
+
+  if (plan.tips?.length) {
+    parts.push(`## Local Travel Tips`);
+    plan.tips.forEach((t, i) => parts.push(`${i + 1}. ${t}`));
+  }
+
+  if (plan.safety?.length) {
+    parts.push(`## Safety & Cultural Tips`);
+    plan.safety.forEach((s) => parts.push(`- ${s}`));
+  }
+
+  if (plan.bestTimes?.length) {
+    parts.push(`## Best Times to Visit`);
+    plan.bestTimes.forEach((b) => {
+      parts.push(`**${b.place}** — ${b.bestTime}`);
+      parts.push(b.reason);
+    });
+  }
+
+  if (plan.budget) {
+    parts.push(`## Estimated Budget`);
+    parts.push(`- Accommodation: ${plan.budget.accommodation}`);
+    parts.push(`- Food: ${plan.budget.food}`);
+    parts.push(`- Activities: ${plan.budget.activities}`);
+    parts.push(`- Transport: ${plan.budget.transport}`);
+    parts.push(`**Total: ${plan.budget.total}**`);
+  }
+
+  return parts.join("\n\n");
+};
 
 interface TripResultsProps {
   tripPlan: TripPlan;
@@ -24,6 +87,22 @@ interface TripResultsProps {
 }
 
 const TripResults = ({ tripPlan, destination, days, onReset }: TripResultsProps) => {
+  const handleDownloadPDF = () => {
+    try {
+      const content = tripPlan.rawContent
+        ? tripPlan.rawContent
+        : tripPlanToMarkdown(tripPlan, destination, days);
+      generateTravelPDF(content, {
+        title: "Your Travel Plan",
+        destination: `${destination} • ${days} Days`,
+      });
+      toast.success("PDF downloaded!");
+    } catch (err) {
+      console.error("PDF generation error:", err);
+      toast.error("Failed to generate PDF");
+    }
+  };
+
   // If we got raw content instead of structured JSON
   if (tripPlan.rawContent) {
     return (
@@ -33,10 +112,16 @@ const TripResults = ({ tripPlan, destination, days, onReset }: TripResultsProps)
             <h2 className="font-display text-3xl font-bold text-foreground">
               Your Trip to {destination}
             </h2>
-            <Button onClick={onReset} variant="outline" className="gap-2">
-              <RotateCcw className="w-4 h-4" />
-              Plan Another Trip
-            </Button>
+            <div className="flex gap-3">
+              <Button onClick={handleDownloadPDF} variant="outline" className="gap-2">
+                <Download className="w-4 h-4" />
+                Download PDF
+              </Button>
+              <Button onClick={onReset} variant="outline" className="gap-2">
+                <RotateCcw className="w-4 h-4" />
+                Plan Another Trip
+              </Button>
+            </div>
           </div>
           <div className="bg-card rounded-2xl p-8 prose prose-lg max-w-none">
             <ReactMarkdown>{tripPlan.rawContent}</ReactMarkdown>
@@ -65,7 +150,7 @@ const TripResults = ({ tripPlan, destination, days, onReset }: TripResultsProps)
               <Share2 className="w-4 h-4" />
               Share
             </Button>
-            <Button variant="outline" className="gap-2">
+            <Button onClick={handleDownloadPDF} variant="outline" className="gap-2">
               <Download className="w-4 h-4" />
               Download PDF
             </Button>
