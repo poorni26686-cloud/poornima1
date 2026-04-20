@@ -195,13 +195,18 @@ import { profileSchema } from "@/lib/validations";
                    <User className="h-4 w-4" />
                    Full Name
                  </Label>
-                 <Input
-                   id="full_name"
-                   value={profile.full_name || ""}
-                   onChange={(e) => setProfile({ ...profile, full_name: e.target.value })}
-                   placeholder="Enter your full name"
-                 />
-               </div>
+                  <Input
+                    id="full_name"
+                    value={profile.full_name || ""}
+                    onChange={(e) => setProfile({ ...profile, full_name: e.target.value })}
+                    placeholder="Enter your full name"
+                    maxLength={100}
+                    aria-invalid={!!errors.full_name}
+                  />
+                  {errors.full_name && (
+                    <p className="text-xs text-destructive">{errors.full_name}</p>
+                  )}
+                </div>
  
                {/* Email (read-only) */}
                <div className="space-y-2">
@@ -226,13 +231,24 @@ import { profileSchema } from "@/lib/validations";
                    <Phone className="h-4 w-4" />
                    Phone Number
                  </Label>
-                 <Input
-                   id="phone"
-                   value={profile.phone || ""}
-                   onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
-                   placeholder="Enter your phone number"
-                 />
-               </div>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    inputMode="tel"
+                    value={profile.phone || ""}
+                    onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
+                    placeholder="+91 98765 43210"
+                    maxLength={20}
+                    aria-invalid={!!errors.phone}
+                  />
+                  {errors.phone ? (
+                    <p className="text-xs text-destructive">{errors.phone}</p>
+                  ) : (
+                    <p className="text-xs text-muted-foreground">
+                      Include country code, e.g. +91 98765 43210
+                    </p>
+                  )}
+                </div>
  
                {/* Save Button */}
                <Button 
