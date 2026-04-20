@@ -59,17 +59,17 @@ const stats = [
 
 const team = [
   {
-    name: "Poornima S.",
+    name: "Poornima",
     role: "Founder & Product Lead",
     bio: "Passionate about making travel planning effortless for everyone.",
   },
   {
-    name: "Arjun R.",
+    name: "Rachitha",
     role: "Head of Destinations",
     bio: "Spent 8+ years curating offbeat experiences across India.",
   },
   {
-    name: "Meera K.",
+    name: "Vindhya",
     role: "AI & Engineering",
     bio: "Builds the intelligence behind smart itineraries and recommendations.",
   },
