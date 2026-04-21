@@ -225,13 +225,43 @@ const Auth = () => {
             </span>
           </Link>
 
+          {/* Mode toggle: User vs Admin */}
+          <div className="grid grid-cols-2 gap-2 p-1 rounded-xl bg-white/10 border border-white/20">
+            <button
+              type="button"
+              onClick={() => switchMode("user")}
+              className={cn(
+                "flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-semibold transition-all",
+                mode === "user"
+                  ? "bg-primary text-primary-foreground shadow-md"
+                  : "text-foreground hover:bg-white/10"
+              )}
+            >
+              <Users className="w-4 h-4" /> User
+            </button>
+            <button
+              type="button"
+              onClick={() => switchMode("admin")}
+              className={cn(
+                "flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-semibold transition-all",
+                mode === "admin"
+                  ? "bg-primary text-primary-foreground shadow-md"
+                  : "text-foreground hover:bg-white/10"
+              )}
+            >
+              <Shield className="w-4 h-4" /> Admin
+            </button>
+          </div>
+
           {/* Header - Changes based on mode */}
           <div>
             <h1 className="font-display text-3xl font-bold text-foreground">
-              {isLogin ? "Welcome back" : "Create account"}
+              {mode === "admin" ? "Admin Portal" : isLogin ? "Welcome back" : "Create account"}
             </h1>
             <p className="text-muted-foreground mt-2">
-              {isLogin
+              {mode === "admin"
+                ? "Sign in with administrator credentials"
+                : isLogin
                 ? "Enter your credentials to access your account"
                 : "Start your journey with us today"}
             </p>
