@@ -29,6 +29,7 @@ import Favorites from "./pages/Favorites";
 import About from "./pages/About";
 import Guides from "./pages/Guides";
 import Admin from "./pages/Admin";
+import AdminLogin from "./pages/AdminLogin";
 
 // Create React Query client with default options
 const queryClient = new QueryClient();
@@ -53,6 +54,7 @@ const App = () => (
             <Route path="/about" element={<About />} />
             <Route path="/guides" element={<Guides />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/admin-login" element={<AdminLogin />} />
             
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
