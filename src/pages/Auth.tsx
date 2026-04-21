@@ -429,8 +429,10 @@ const Auth = () => {
                   className="text-primary font-medium hover:underline"
                 >
                   {isLogin ? "Sign up" : "Sign in"}
-            </button>
-          </p>
+                </button>
+              </p>
+            </>
+          )}
         </div>
       </div>
 
