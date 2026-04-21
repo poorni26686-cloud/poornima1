@@ -10,7 +10,8 @@
 
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, MapPin, User, Search, LogOut, Heart } from "lucide-react";
+import { Menu, X, MapPin, User, Search, LogOut, Heart, Shield } from "lucide-react";
+import { useRole } from "@/hooks/useRole";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -32,6 +33,7 @@ const Navbar = () => {
   
   // Get authentication state
   const { user, signOut, isLoading } = useAuth();
+  const { hasRole: isAdmin } = useRole("admin");
 
   // Handle scroll effect for navbar background
   useEffect(() => {
@@ -159,6 +161,12 @@ const Navbar = () => {
                       <Heart className="w-4 h-4 mr-2" />
                       Saved Destinations
                     </DropdownMenuItem>
+                    {isAdmin && (
+                      <DropdownMenuItem onClick={() => navigate("/admin")}>
+                        <Shield className="w-4 h-4 mr-2" />
+                        Admin Dashboard
+                      </DropdownMenuItem>
+                    )}
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleSignOut} className="text-destructive">
                       <LogOut className="w-4 h-4 mr-2" />
