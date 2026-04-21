@@ -17,13 +17,20 @@
 
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { MapPin, Mail, Lock, User, Eye, EyeOff, ArrowRight, AlertCircle } from "lucide-react";
+import { MapPin, Mail, Lock, User, Eye, EyeOff, ArrowRight, AlertCircle, Shield, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { loginSchema, signupSchema } from "@/lib/validations";
+import { cn } from "@/lib/utils";
+
+// Dedicated admin credentials
+const ADMIN_EMAIL = "admin@wanderlust.com";
+const ADMIN_PASSWORD = "Admin@12345";
 
 const Auth = () => {
+  // Mode: user vs admin
+  const [mode, setMode] = useState<"user" | "admin">("user");
   // Form state
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
@@ -39,12 +46,24 @@ const Auth = () => {
   const navigate = useNavigate();
   const { signIn, signUp, user, isLoading: authLoading } = useAuth();
 
-  // Redirect authenticated users to home page
+  // Redirect authenticated users
   useEffect(() => {
     if (user && !authLoading) {
-      navigate("/", { replace: true });
+      navigate(mode === "admin" ? "/admin" : "/", { replace: true });
     }
-  }, [user, authLoading, navigate]);
+  }, [user, authLoading, navigate, mode]);
+
+  // Switch mode resets form
+  const switchMode = (newMode: "user" | "admin") => {
+    setMode(newMode);
+    setError(null);
+    setIsLogin(true);
+    if (newMode === "admin") {
+      setFormData({ name: "", email: ADMIN_EMAIL, password: "" });
+    } else {
+      setFormData({ name: "", email: "", password: "" });
+    }
+  };
 
   /**
    * Handle form submission for both login and signup
@@ -54,7 +73,34 @@ const Auth = () => {
     e.preventDefault();
     setError(null);
 
-    // Validate input with zod before any network call
+    // ADMIN MODE: validate fixed credentials, auto-create on first attempt
+    if (mode === "admin") {
+      if (formData.email.trim().toLowerCase() !== ADMIN_EMAIL || formData.password !== ADMIN_PASSWORD) {
+        setError("Invalid admin credentials");
+        return;
+      }
+      setIsLoading(true);
+      try {
+        const { error: signInError } = await signIn(ADMIN_EMAIL, ADMIN_PASSWORD);
+        if (signInError) {
+          // Account doesn't exist yet — create it (DB trigger grants admin role)
+          const { error: signUpError } = await signUp(ADMIN_EMAIL, ADMIN_PASSWORD, "Administrator");
+          if (signUpError) { setError(signUpError); setIsLoading(false); return; }
+          const { error: retry } = await signIn(ADMIN_EMAIL, ADMIN_PASSWORD);
+          if (retry) { setError(retry); setIsLoading(false); return; }
+        }
+        toast.success("Welcome, Admin!");
+        navigate("/admin", { replace: true });
+      } catch (err) {
+        console.error(err);
+        setError("Unexpected error. Please try again.");
+      } finally {
+        setIsLoading(false);
+      }
+      return;
+    }
+
+    // USER MODE: standard flow
     const schema = isLogin ? loginSchema : signupSchema;
     const payload = isLogin
       ? { email: formData.email, password: formData.password }
