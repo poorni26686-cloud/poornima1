@@ -15,7 +15,7 @@ const cards = [
     title: "Tour Guides",
     description: "Connect with expert local guides",
     icon: Users,
-    path: "/destinations",
+    path: "/guides",
     gradient: "from-secondary to-secondary/70",
   },
   {
