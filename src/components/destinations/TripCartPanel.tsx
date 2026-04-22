@@ -3,10 +3,12 @@
  */
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { X, Trash2, MapPin, Sparkles, Loader2, ShoppingBag } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useTripCart, playSound } from "@/contexts/TripCartContext";
+import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
