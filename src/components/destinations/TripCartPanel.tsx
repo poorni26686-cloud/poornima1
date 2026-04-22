@@ -3,10 +3,12 @@
  */
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { X, Trash2, MapPin, Sparkles, Loader2, ShoppingBag } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useTripCart, playSound } from "@/contexts/TripCartContext";
+import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
@@ -19,12 +21,21 @@ interface TripCartPanelProps {
 
 const TripCartPanel = ({ isOpen, onClose }: TripCartPanelProps) => {
   const { items, removeItem, clearCart, count } = useTripCart();
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [tripPlan, setTripPlan] = useState<string | null>(null);
   const [isPlanning, setIsPlanning] = useState(false);
 
   const generateTripPlan = async () => {
     if (items.length === 0) {
       toast.error("Add at least one place to plan a trip");
+      return;
+    }
+
+    if (!user) {
+      toast.error("Please sign in to generate an AI trip plan");
+      onClose();
+      navigate("/auth");
       return;
     }
 
