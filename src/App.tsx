@@ -28,6 +28,8 @@ import Profile from "./pages/Profile";
 import Favorites from "./pages/Favorites";
 import About from "./pages/About";
 import Guides from "./pages/Guides";
+import Tours from "./pages/Tours";
+import TourDetail from "./pages/TourDetail";
 import Admin from "./pages/Admin";
 import AdminLogin from "./pages/AdminLogin";
 
@@ -53,6 +55,8 @@ const App = () => (
             <Route path="/favorites" element={<Favorites />} />
             <Route path="/about" element={<About />} />
             <Route path="/guides" element={<Guides />} />
+            <Route path="/tours" element={<Tours />} />
+            <Route path="/tour/:id" element={<TourDetail />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/admin-login" element={<AdminLogin />} />
             
