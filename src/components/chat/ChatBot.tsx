@@ -243,21 +243,44 @@ const ChatBot = () => {
                   <Sparkles className="w-4 h-4 text-secondary-foreground" />
                 )}
               </div>
-              <div
-                className={cn(
-                  "max-w-[75%] rounded-2xl px-4 py-3 text-sm",
-                  message.role === "user"
-                    ? "bg-primary text-primary-foreground rounded-tr-none"
-                    : "bg-muted text-foreground rounded-tl-none"
-                )}
-              >
-                {message.role === "assistant" ? (
-                  <div className="prose prose-sm dark:prose-invert max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 [&_ul]:my-1 [&_li]:my-0.5 [&_p]:my-1">
-                    <ReactMarkdown>{message.content}</ReactMarkdown>
-                  </div>
-                ) : (
-                  message.content
-                )}
+              <div className="flex flex-col gap-2 max-w-[75%]">
+                <div
+                  className={cn(
+                    "rounded-2xl px-4 py-3 text-sm",
+                    message.role === "user"
+                      ? "bg-primary text-primary-foreground rounded-tr-none"
+                      : "bg-muted text-foreground rounded-tl-none"
+                  )}
+                >
+                  {message.role === "assistant" ? (
+                    <div className="prose prose-sm dark:prose-invert max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0 [&_ul]:my-1 [&_li]:my-0.5 [&_p]:my-1">
+                      <ReactMarkdown>{message.content}</ReactMarkdown>
+                    </div>
+                  ) : (
+                    message.content
+                  )}
+                </div>
+                {message.role === "assistant" &&
+                  message.id !== "welcome" &&
+                  /day\s*\d|itinerary|morning|afternoon|evening|budget|travel plan/i.test(message.content) && (
+                    <button
+                      onClick={handleGeneratePdf}
+                      disabled={isGeneratingPdf}
+                      className="self-start flex items-center gap-2 text-xs py-2 px-3 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shadow-sm"
+                    >
+                      {isGeneratingPdf ? (
+                        <>
+                          <Loader2 className="w-3 h-3 animate-spin" />
+                          Generating PDF...
+                        </>
+                      ) : (
+                        <>
+                          <FileDown className="w-3 h-3" />
+                          Download this plan as PDF
+                        </>
+                      )}
+                    </button>
+                  )}
               </div>
             </div>
           ))}
