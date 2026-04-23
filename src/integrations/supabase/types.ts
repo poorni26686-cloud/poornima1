@@ -141,6 +141,59 @@ export type Database = {
           },
         ]
       }
+      guide_bookings: {
+        Row: {
+          contact_phone: string | null
+          created_at: string
+          end_date: string
+          guide_id: string
+          id: string
+          notes: string | null
+          num_people: number
+          start_date: string
+          status: string
+          total_price: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          contact_phone?: string | null
+          created_at?: string
+          end_date: string
+          guide_id: string
+          id?: string
+          notes?: string | null
+          num_people?: number
+          start_date: string
+          status?: string
+          total_price?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          contact_phone?: string | null
+          created_at?: string
+          end_date?: string
+          guide_id?: string
+          id?: string
+          notes?: string | null
+          num_people?: number
+          start_date?: string
+          status?: string
+          total_price?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "guide_bookings_guide_id_fkey"
+            columns: ["guide_id"]
+            isOneToOne: false
+            referencedRelation: "guides"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       guides: {
         Row: {
           bio: string | null
