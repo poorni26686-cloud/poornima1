@@ -177,6 +177,11 @@ const Guides = () => {
 
       <Footer />
       <ChatBot />
+      <BookGuideDialog
+        guide={bookingGuide}
+        open={!!bookingGuide}
+        onOpenChange={(o) => !o && setBookingGuide(null)}
+      />
     </div>
   );
 };
