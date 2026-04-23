@@ -33,6 +33,7 @@ const Guides = () => {
   const [guides, setGuides] = useState<Guide[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [bookingGuide, setBookingGuide] = useState<Guide | null>(null);
 
   useEffect(() => {
     const fetchGuides = async () => {
