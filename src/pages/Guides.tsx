@@ -163,6 +163,9 @@ const Guides = () => {
                           {Number(g.price_per_day).toFixed(0)}
                         </span>
                       </div>
+                      <Button className="w-full mt-2" size="sm" onClick={() => setBookingGuide(g)}>
+                        <CalendarCheck className="w-4 h-4" /> Book Guide
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
