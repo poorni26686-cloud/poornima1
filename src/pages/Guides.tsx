@@ -4,13 +4,15 @@
  */
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Search, MapPin, Languages, Award, Phone, Mail, Star, Loader2, IndianRupee } from "lucide-react";
+import { Search, MapPin, Languages, Award, Phone, Mail, Star, Loader2, IndianRupee, CalendarCheck } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ChatBot from "@/components/chat/ChatBot";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import BookGuideDialog from "@/components/guides/BookGuideDialog";
 
 interface Guide {
   id: string;
@@ -31,6 +33,7 @@ const Guides = () => {
   const [guides, setGuides] = useState<Guide[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [bookingGuide, setBookingGuide] = useState<Guide | null>(null);
 
   useEffect(() => {
     const fetchGuides = async () => {
@@ -160,6 +163,9 @@ const Guides = () => {
                           {Number(g.price_per_day).toFixed(0)}
                         </span>
                       </div>
+                      <Button className="w-full mt-2" size="sm" onClick={() => setBookingGuide(g)}>
+                        <CalendarCheck className="w-4 h-4" /> Book Guide
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -171,6 +177,11 @@ const Guides = () => {
 
       <Footer />
       <ChatBot />
+      <BookGuideDialog
+        guide={bookingGuide}
+        open={!!bookingGuide}
+        onOpenChange={(o) => !o && setBookingGuide(null)}
+      />
     </div>
   );
 };
