@@ -4,13 +4,15 @@
  */
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Search, MapPin, Languages, Award, Phone, Mail, Star, Loader2, IndianRupee } from "lucide-react";
+import { Search, MapPin, Languages, Award, Phone, Mail, Star, Loader2, IndianRupee, CalendarCheck } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ChatBot from "@/components/chat/ChatBot";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import BookGuideDialog from "@/components/guides/BookGuideDialog";
 
 interface Guide {
   id: string;
