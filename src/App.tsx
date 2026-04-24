@@ -32,6 +32,14 @@ import Tours from "./pages/Tours";
 import TourDetail from "./pages/TourDetail";
 import Admin from "./pages/Admin";
 import AdminLogin from "./pages/AdminLogin";
+import HelpCenter from "./pages/HelpCenter";
+import SafetyInfo from "./pages/SafetyInfo";
+import Cancellation from "./pages/Cancellation";
+import TravelGuidelines from "./pages/TravelGuidelines";
+import FAQs from "./pages/FAQs";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
+import Cookies from "./pages/Cookies";
 
 // Create React Query client with default options
 const queryClient = new QueryClient();
@@ -59,6 +67,14 @@ const App = () => (
             <Route path="/tour/:id" element={<TourDetail />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/admin-login" element={<AdminLogin />} />
+            <Route path="/help" element={<HelpCenter />} />
+            <Route path="/safety" element={<SafetyInfo />} />
+            <Route path="/cancellation" element={<Cancellation />} />
+            <Route path="/travel-guidelines" element={<TravelGuidelines />} />
+            <Route path="/faqs" element={<FAQs />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/cookies" element={<Cookies />} />
             
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
