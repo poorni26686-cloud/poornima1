@@ -32,7 +32,11 @@ const TripCartPanel = ({ isOpen, onClose }: TripCartPanelProps) => {
       return;
     }
 
-    if (!user) {
+    // Always re-check the session in case the cached user is stale
+    const { data: sessionData } = await supabase.auth.getSession();
+    const session = sessionData?.session;
+
+    if (!user || !session) {
       toast.error("Please sign in to generate an AI trip plan");
       onClose();
       navigate("/auth");
@@ -56,9 +60,23 @@ const TripCartPanel = ({ isOpen, onClose }: TripCartPanelProps) => {
           season: "winter",
           pace: "moderate",
         },
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
       });
 
-      if (error) throw error;
+      if (error) {
+        // Friendly auth error
+        const msg = (error as any)?.message || "";
+        if (msg.includes("401") || msg.toLowerCase().includes("auth")) {
+          toast.error("Your session expired. Please sign in again.");
+          onClose();
+          navigate("/auth");
+          return;
+        }
+        throw error;
+      }
+
 
       const plan = data?.tripPlan;
       if (plan?.rawContent) {
