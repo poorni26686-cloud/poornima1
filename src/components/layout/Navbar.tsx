@@ -47,7 +47,6 @@ const Navbar = () => {
   // Navigation links configuration
   const navLinks = [
     { name: "Destinations", href: "/destinations" },
-    { name: "Tours", href: "/tours" },
     { name: "Tour Guides", href: "/guides" },
     { name: "Plan Trip", href: "/planner" },
     { name: "About", href: "/about" },
