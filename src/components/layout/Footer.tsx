@@ -47,26 +47,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Support */}
-          <div>
-            <h4 className="font-display text-lg font-semibold mb-4">Support</h4>
-            <ul className="space-y-3">
-              {[
-                { label: "Help Center", to: "/help" },
-                { label: "Safety Info", to: "/safety" },
-                { label: "Cancellation Options", to: "/cancellation" },
-                { label: "Travel Guidelines", to: "/travel-guidelines" },
-                { label: "FAQs", to: "/faqs" },
-              ].map((item) => (
-                <li key={item.label}>
-                  <Link to={item.to} className="text-primary-foreground/60 hover:text-secondary transition-colors text-sm">
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
           {/* Contact */}
           <div>
             <h4 className="font-display text-lg font-semibold mb-4">Contact Us</h4>
