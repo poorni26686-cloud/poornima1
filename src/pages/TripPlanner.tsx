@@ -129,11 +129,28 @@ const TripPlanner = () => {
     setTripPlan(null);
 
     try {
+      // Ensure user is authenticated before invoking the protected edge function
+      const { data: sessionData } = await supabase.auth.getSession();
+      const session = sessionData?.session;
+      if (!session) {
+        toast.error("Please sign in to generate a trip plan");
+        navigate("/auth");
+        setIsGenerating(false);
+        return;
+      }
+
       const { data, error } = await supabase.functions.invoke("generate-trip", {
         body: formData,
+        headers: { Authorization: `Bearer ${session.access_token}` },
       });
 
       if (error) {
+        const msg = (error as any)?.message || "";
+        if (msg.includes("401") || msg.toLowerCase().includes("auth")) {
+          toast.error("Your session expired. Please sign in again.");
+          navigate("/auth");
+          return;
+        }
         throw error;
       }
 
