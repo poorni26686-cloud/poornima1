@@ -31,15 +31,19 @@ const Footer = () => {
           <div>
             <h4 className="font-display text-lg font-semibold mb-4">Explore</h4>
             <ul className="space-y-3">
-              {["Destinations", "Tour Guides", "Trip Planner", "Hotels", "Restaurants"].map(
-                (item) => (
-                  <li key={item}>
-                    <Link to="#" className="text-primary-foreground/60 hover:text-secondary transition-colors text-sm">
-                      {item}
-                    </Link>
-                  </li>
-                )
-              )}
+              {[
+                { label: "Destinations", to: "/destinations" },
+                { label: "Tour Guides", to: "/guides" },
+                { label: "Trip Planner", to: "/planner" },
+                { label: "Favorites", to: "/favorites" },
+                { label: "About", to: "/about" },
+              ].map((item) => (
+                <li key={item.label}>
+                  <Link to={item.to} className="text-primary-foreground/60 hover:text-secondary transition-colors text-sm">
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -47,15 +51,19 @@ const Footer = () => {
           <div>
             <h4 className="font-display text-lg font-semibold mb-4">Support</h4>
             <ul className="space-y-3">
-              {["Help Center", "Safety Info", "Cancellation Options", "Travel Guidelines", "FAQs"].map(
-                (item) => (
-                  <li key={item}>
-                    <Link to="#" className="text-primary-foreground/60 hover:text-secondary transition-colors text-sm">
-                      {item}
-                    </Link>
-                  </li>
-                )
-              )}
+              {[
+                { label: "Help Center", to: "/help" },
+                { label: "Safety Info", to: "/safety" },
+                { label: "Cancellation Options", to: "/cancellation" },
+                { label: "Travel Guidelines", to: "/travel-guidelines" },
+                { label: "FAQs", to: "/faqs" },
+              ].map((item) => (
+                <li key={item.label}>
+                  <Link to={item.to} className="text-primary-foreground/60 hover:text-secondary transition-colors text-sm">
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -90,9 +98,13 @@ const Footer = () => {
             © 2025 Wanderlust. All rights reserved.
           </p>
           <div className="flex gap-6">
-            {["Privacy Policy", "Terms of Service", "Cookies"].map((item) => (
-              <Link key={item} to="#" className="text-primary-foreground/40 hover:text-secondary text-sm transition-colors">
-                {item}
+            {[
+              { label: "Privacy Policy", to: "/privacy" },
+              { label: "Terms of Service", to: "/terms" },
+              { label: "Cookies", to: "/cookies" },
+            ].map((item) => (
+              <Link key={item.label} to={item.to} className="text-primary-foreground/40 hover:text-secondary text-sm transition-colors">
+                {item.label}
               </Link>
             ))}
           </div>
