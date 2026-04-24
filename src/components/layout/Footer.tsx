@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <footer className="bg-primary text-primary-foreground">
       <div className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
           {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
@@ -37,26 +37,6 @@ const Footer = () => {
                 { label: "Trip Planner", to: "/planner" },
                 { label: "Favorites", to: "/favorites" },
                 { label: "About", to: "/about" },
-              ].map((item) => (
-                <li key={item.label}>
-                  <Link to={item.to} className="text-primary-foreground/60 hover:text-secondary transition-colors text-sm">
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Support */}
-          <div>
-            <h4 className="font-display text-lg font-semibold mb-4">Support</h4>
-            <ul className="space-y-3">
-              {[
-                { label: "Help Center", to: "/help" },
-                { label: "Safety Info", to: "/safety" },
-                { label: "Cancellation Options", to: "/cancellation" },
-                { label: "Travel Guidelines", to: "/travel-guidelines" },
-                { label: "FAQs", to: "/faqs" },
               ].map((item) => (
                 <li key={item.label}>
                   <Link to={item.to} className="text-primary-foreground/60 hover:text-secondary transition-colors text-sm">
