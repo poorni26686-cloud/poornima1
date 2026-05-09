@@ -53,6 +53,7 @@ const App = () => (
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Index />} />
+            <Route path="/index" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/destinations" element={<Destinations />} />
             <Route path="/destination/:id" element={<DestinationDetail />} />
